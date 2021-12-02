@@ -9,7 +9,7 @@ Router.get('/:id', getUser)
 Router.get('/', getStudentUsers)
 Router.post('/', createUser)
 Router.post('/login', login)
-Router.post('/sendemail', sendEmailTest)
+//Router.post('/sendemail', sendEmailTest)
 
 
 

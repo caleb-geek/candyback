@@ -17,7 +17,7 @@ exports.getUser = (req, res) => {
 
   // Get all students
 exports.getStudentUsers = (req, res) => {
-  return User.findAll({where:{roleId:"admin"}}).then(user => {
+  return User.findAll({where:{roleId:"student"}}).then(user => {
     res.status(200).json(user)
   }).catch((err) => {
     return res.status(400).json({ message: err.message })
@@ -26,34 +26,20 @@ exports.getStudentUsers = (req, res) => {
 
 // Create user
 exports.createUser = async (req, res) => {
+  const verificationString = v4()
  const {firstname,lastname,email,username,password,classname,roleId}=req.body;
   const hash = bcrypt.hashSync(password, 10);
-  const verificationString = v4()
+ 
 
-  // //Confirm if email/user exits
-  // const db_email = await User.findOne({ where: { email: email} })
-  // const db_user = await User.findOne({ where: { username: username} })
+  //Confirm if email/user exits
+  const db_email = await User.findOne({ where: { email: email} })
+  const db_user = await User.findOne({ where: { username: username} })
 
-  // if(db_email||db_user){
-  //   res.sendStatus(409)
-  // }
+  if(db_email||db_user){
+    res.sendStatus(409)
+  }
 
-  try{
-    await sendEmail({
-        to:email,
-        from:'caleb.osano.co@gmail.com',
-        subject:'Please verify your email',
-        text:`
-            Thanks for signing up, to verify your email click here:
-            http://localhost:5000/verify-email${verificationString} `,
-        
 
-    })
-    res.sendStatus(200)
-}catch(e){
- console.log(e)
- res.sendStatus(500)
-}
     return User.create( {
       firstName:firstname,
       lastName:lastname,
